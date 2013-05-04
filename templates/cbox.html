@@ -1,35 +1,86 @@
 {% autoescape None %}
-<html>
-  <head>
-    <title> {{ page_title }} </title>
-	<link rel="stylesheet" href="{{ static_url("test.css") }}" type="text/css" />
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js" type="text/javascript"></script>
-    <script src="{{ static_url("test.js") }}" type="text/javascript"></script>
-    </head>
-	<body>
-	<div id="wrapper" class="container">
+{% extends main.html %}
+{% block body %}
+<div class="navbar" id="mainnav">
+
+				<div class="navbar-inner">
+					<a href="/box"class="brand"> Zefira </a>
+					<ul class="nav pull-right">
+				<li id="fat-menu" class="dropdown">
+					<a class="dropdown-toggle" 
+					data-toogle="dropdown"
+					href="#">Account<b class="caret"> </b></a>
+				
+				<ul class="dropdown-menu" role="menu">
+					<li> 
+						<a href="/settings"> Settings </a></li>
+					<li>	<a href="/profile"> Profile </a>
+						</li>
+						<li class="divider">
+						</li>
+						<li> <a href="/logout">Logout </a></li>
+					</ul>
+				</li>
+			</ul>
+				</div>
+			</div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span2">
 	
-	<div id="page">
+	 
+        
+	</br>
+
+	{% include "handle2.html" %}
+	</div>
+
+	<div class="span10" id="contenido-principal">
+		<div class="tab-pane" id="pills-basic">
+		<div class="tababble">
+		<ul class="nav nav-pills">
+			<li class="active">
+				<a href="#cbox-panel" data-toggle="tab"> Box </a>
+			</li>
+
+			<li><a href="#reservas-panel" data-toggle="tab"> Reservas </a>
+				</li>
+				<li>
+					<a href="#eventos-panel" data-toggle="tab"> Eventos </a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="cbox-panel" class="tab-pane active">
+					
+
+
+					<h2> Beneficios Disponibles </h2>
+					{% if not benefits %}
+					<p> No has publicado ningun beneficio aun. Dirigete aqui para empezar: <a href="publish"> Ir </a>
+					{% end %}
+					{% if benefits %}	
+					{% for benefit in benefits %}
+					{{ modules.BenefitCo(benefit) }}
+					{% end %}
+    					{% end %}
+    			</div>
+    			<div id="reservas-panel" class="tab-pane">
+    				<h1> En construccion reservas</h1>
+    			</div>
+    			<div id="eventos-panel" class="tab-pane">
+    				<h1> En construccion eventos</h1>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+		</div>		
+    	
+	</div>
+	</div>
+    
+	</div>
+
 	
-    <h1> {{ header_text }} </h1>
-    <p> El box de Zefira :) Hola {{ user }} </p>
-	<div id="sidebar">
-	{% include "handle.html" %}
-	</div>
-	<div id="content">
-    <h2> Beneficios Disponibles </h2>
-	{% if not benefits %}
-	<p> No has publicado ningun beneficio aun. Dirigete aqui para empezar: <a href="publish"> Ir </a>
-	{% end %}
-	{% if benefits %}	
-	{% for benefit in benefits %}
-	{{ modules.BenefitCo(benefit) }}
-	{% end %}
-    {% end %}
-	</div>
-<p> Para salir: <a href="/logout" /> Salir </a> </p>
-	</div>	
 	
-	</div>
-  </body>
-</html>
+{% end %}	
+ 

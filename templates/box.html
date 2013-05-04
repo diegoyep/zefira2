@@ -1,31 +1,85 @@
 
 {% extends main.html %}
 {% block body %}
-    
+<div class="navbar" id="mainnav">
+
+				<div class="navbar-inner">
+					<a href="/box"class="brand"> Zefira </a>
+					<ul class="nav pull-right">
+				<li id="fat-menu" class="dropdown">
+					<a class="dropdown-toggle" 
+					data-toogle="dropdown"
+					href="#">Account<b class="caret"> </b></a>
+				
+				<ul class="dropdown-menu" role="menu">
+					<li> 
+						<a href="/settings"> Settings </a></li>
+					<li>	<a href="/profile"> Profile </a>
+						</li>
+						<li class="divider">
+						</li>
+						<li> <a href="/logout">Logout </a></li>
+					</ul>
+				</li>
+			</ul>
+				</div>
+			</div>
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span2">
-    <h1> {{ header_text }} </h1>
-    <p> El box de Zefira :) Hola {{ user }} </p>
 	
+	 
+        
+	</br>
+
 	{% include "handle2.html" %}
 	</div>
-	<div id="span10">
-    <h2> Beneficios Disponibles </h2>
-    
-	{% if not benefits %}
-	<p> No estas siguiendo a ninguna empresa o las que estas siguiendo no han publicado nada aun.</p><p> Enterate quienes estan y que estan publicando <a href="/companies"> Aqui</a></p>
-	{% end %}
-	{% if benefits %}
-	{% for benefit in benefits %}
-	{{ modules.Benefit(benefit) }}
+
+	<div class="span10" id="contenido-principal">
+		<div class="tab-pane" id="pills-basic">
+		<div class="tababble">
+		<ul class="nav nav-pills">
+			<li class="active">
+				<a href="#box-panel" data-toggle="tab"> Box </a>
+			</li>
+
+			<li><a href="#reservas-panel" data-toggle="tab"> Reservas </a>
+				</li>
+				<li>
+					<a href="#eventos-panel" data-toggle="tab"> Eventos </a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="box-panel" class="tab-pane active">
+					
+
+
+					{% if not benefits %}
+					<p> No estas siguiendo a ninguna empresa o las que estas siguiendo no han publicado nada aun.</p><p> Enterate quienes estan y que estan publicando <a href="/companies"> Aqui</a></p>
+					{% end %}
+					{% if benefits %}
+					{% for benefit in benefits %}
+					{{ modules.Benefit(benefit) }}
 	
-	{% end %}
-    {% end %}
+					{% end %}
+    				{% end %}
+    			</div>
+    			<div id="reservas-panel" class="tab-pane">
+    				<h1> En construccion reservas</h1>
+    			</div>
+    			<div id="eventos-panel" class="tab-pane">
+    				<h1> En construccion eventos</h1>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+		</div>		
+    	
+	</div>
 	</div>
     
 	</div>
-</div>
+
 	
 	
 {% end %}	

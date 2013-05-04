@@ -5,25 +5,19 @@
     <title> {{ page_title }} </title>
     <script src="{{ static_url('jquery-1.9.1.js')}}" type="text/javascript"></script>
   <link rel="stylesheet" href="{{ static_url('bootstrap.css') }}" type="text/css" />
-  <link rel="stylesheet" href="{{ static_url('test.css')}}" type="text/css" />
+  
   <link rel="stylesheet" href="{{ static_url('bootstrap-responsive.css') }}" type="text/css" />
   <script src="{{ static_url('bootstrap.js')}}" type="text/javascript"></script>
   <script src="{{static_url('test.js')}}" type="text/javascript"></script>
+  <link rel="stylesheet" href="{{ static_url('test.css')}}" type="text/css" />
   </head>
   <body>
     
     {% block body %}
     {% end %}
-    <footer class="footer">
+   
     
-<nav class="navbar">
-<ul>
-<li><a href="#">About</a></li>
-<li><a href="#">Contacto</a></li>
-<li><a href="#">Inicio </a></li>
-</ul>
-</nav>
-</footer>
+
 
   </body>
 </html>

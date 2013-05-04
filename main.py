@@ -120,10 +120,12 @@ class LoginHandler(BaseHandler):
 
 class LogoutHandler(BaseHandler):
     def get(self):
-        if(self.get_argument("logout", None)):
-            self.clear_cookie("zefira_user")
-            self.redirect("/")
+        
+        self.clear_cookie("username")
+        self.clear_cookie("password")
+        self.clear_cookie("branch")
         self.redirect("/")
+        
 
 class ClientesHandler(tornado.web.RequestHandler):
     def get(self):
