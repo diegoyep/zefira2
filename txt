@@ -1,0 +1,17 @@
+creo que no seria mala idea separar la funcionalidad de la reserva de la funcionalidad de presentacion del box. como se vea, creo que el que un beneficio este reservado o no es un asunto aparte de como es que se presenta. en otras palabras, la primera presentacion del box es en esencia el unico momento en el cual interesa al handler el estado de los beneficios, despues el cambiarlos es completa y absoluta responsabilidad del javascript.
+
+osea, la cosa iria algo asi.
+
+handler hace llamada a usuario y beneficios.
+ejecuta la funcion de dereferencia
+al terminar tiene una lista de beneficios sorteados por lugar, unos con un mensaje de reservado y otros no. 
+usuario ve el feed. 
+usuario hace click en boton de reserva
+funcion ajax cambia la presentacion a reservado y ejecuta una request post a un reserve handler que altera la base de datos con la informacion de la nueva reserva y agrega a la lista de sesion la informacion del nuevo beneficio reservado. 
+el usuario sigue revisando el feed. 
+hace click de nuevo en la funcion de reservar
+la funcion ajax ejecuta la inversa del proceso, al encontrar el id del beneficio en reservas lo borra y procede a lo mismo dentro de la array de sesion. esto despues de que la presentacion ya ha sido cambiada a reservar.
+
+creo que va lo mismo con la idea del follow
+
+

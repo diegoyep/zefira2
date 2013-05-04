@@ -1,9 +1,46 @@
-{% extends "main.html" %}
 
+
+{% extends main.html %}
 {%block body %}
+<div class="navbar">
+		<div class="navbar-inner">
+			<a class="brand" id="logo" href="#"> Zefira</a>
+			<ul class="nav pull-right">
+				<li id="fat-menu" class="dropdown">
+					<a class="dropdown-toggle" 
+					data-toogle="dropdown"
+					href="#">Log in <b class="caret"> </b></a>
+				
+				<ul class="dropdown-menu" role="menu">
+					<li> 
+						
+						<form class="navform" action="/login" method="post" accept-charset="UTF-8">
+							{% raw xsrf_form_html() %}
+  <input id="username" type="text" name="username" size="30" placeholder="Usuario" />
+  <input id="password" type="password" name="password" size="30" placeholder="Contraseña"/>
+  <input id="user_remember_me" style="float: left; margin-right: 10px;" type="checkbox" name="remember-me" value="1" />
+  <label class="string optional" for="user_remember_me"> Remember me</label>
+  <input type="hidden" name="branch" id="branch" value="clientes" />
+ 
+  <input class="btn btn-primary" style="clear: left; width: 100%; height: 32px; font-size: 13px;" type="submit" name="commit" value="Sign In" />
+</form>
 
-{% include "logincl.html" %}
-<p> Si no, crea tu usuario </p>
+
+					</li>
+				</ul>
+				</li>
+			</ul>
+		</div>
+</div>	
+ <div class="container">
+
+
+<h1>Un mundo nuevo te espera <h1>
+	<small > Unete a Zefira </small>
+</br>
+</br>
 {% include "signupcl.html" %}
+</div>
 
 {% end %}
+

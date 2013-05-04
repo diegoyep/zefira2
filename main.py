@@ -46,10 +46,12 @@ class Application(tornado.web.Application):
             debug = True,
             cookie_secret = "0azgrztWSuenSRWevq9GAOp/4bDtSET0q8YII0ZfLDc=",
             login_url = "/login",
-            xsrf_cookies = True
+            xsrf_cookies = True,
+            autoescape = None,
         )
         
         self.dataManager = DataManagement("zefira")
+        
         tornado.web.Application.__init__(self, handlers, **settings)
 
 
@@ -57,9 +59,8 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def data_manager(self):
         return self.application.dataManager
-
+    
     def get_current_user(self):
-
         user_id  = self.get_secure_cookie("username")
         password = self.get_secure_cookie("password")
         branch = self.get_secure_cookie("branch")
@@ -69,6 +70,7 @@ class BaseHandler(tornado.web.RequestHandler):
             return user
         else:
             self.set_status(404)
+
 class ErrorHandler(tornado.web.RequestHandler):
     def get(self):
         self.render(
@@ -95,16 +97,11 @@ class PublishHandler(BaseHandler):
                 message = True,
             )
     def post(self):
-        import base64, uuid
-
-        benefit = {
-            "_id":"bene"+base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
-            "title": self.get_argument("title"), 
-            "description":self.get_argument("description"),
-            "company_name": self.current_user['info']['name']
-                  }
-        self.data_manager.publish_benefit(benefit, self.current_user)
-        self.redirect("/cbox")
+        
+        if self.data_manager.publish_benefit(self.request.arguments, self.current_user):
+            self.redirect("/cbox")
+        else:
+            self.redirect("/error")
 
 class LoginHandler(BaseHandler):
     def get(self):
@@ -144,31 +141,40 @@ class EmpresasHandler(tornado.web.RequestHandler):
             header_text=" Zefira Empresas"
             )
 
+
+
 class BoxHandler(BaseHandler):
     @tornado.web.authenticated
     
     def get(self): 
-        interests = self.current_user['interests']    
-        benefits = self.data_manager.fetch_benefits_usr(interests, self.current_user)
+        interests = self.current_user['interests']
+        
+        benefits = self.data_manager.fetch_benefits_usr(
+            interests, self.current_user)
+        
         self.render(
-               "box.html",
+                "box.html",
                page_title = "Zefira | Inicio",
                header_text = "Box",
                user = self.current_user['username'],
-               benefits = benefits,
+               benefits = benefits
                )
 
     def post(self):
+        
         benefit_id  = self.get_argument("benefit_id")
-        self.data_manager.reserve_fnc_users(benefit_id,self.current_user)
-        self.redirect("/box")  
+        self.current_user['session']['benefits'].append(
+                        self.data_manager.reserve_fnc_users(benefit_id,self.current_user))
+        self.redirect("/box")
               
 class CBoxHandler(BaseHandler):
     @tornado.web.authenticated
 
     def get(self):
         benefits_published = self.current_user['benefits']
-        if len(benefits_published) == 0 : benefits_deref = None
+        if len(benefits_published) == 0 or benefits_published == None : 
+            benefits_deref = None
+            
         else:
             benefits_deref = self.data_manager.fetch_benefits_cmp(
                                             benefits_published)
@@ -184,6 +190,12 @@ class CBoxHandler(BaseHandler):
 class SignUpHandler(BaseHandler):
     
     def post(self):
+        """
+        Necesitas arreglar esta vaina, porque mientras mas complicados se hagan 
+        los beneficios peor va a ser. Para eso  vas a tener que utiliza el la propiedad 
+        self.request.arguments que devuelve una lista de todos los argumentos pasados 
+        en el formulario. pasale esto a una funcion y deja que la funcion haga el trabajo.
+        """
         import base64, uuid
         branch = self.get_argument("branch")
         if branch  == "companies":
@@ -208,6 +220,7 @@ class SignUpHandler(BaseHandler):
                 'info':{'email': self.get_argument('email')},
                 'interests': [],
                 'reserves' : [],
+                'session' : {'benefits': []}
                 }
         
         self.set_secure_cookie("username", self.get_argument("username"))

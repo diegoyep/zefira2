@@ -1,4 +1,5 @@
 import pymongo
+import tornado.session
 
 class DataManagement():
     
@@ -7,7 +8,8 @@ class DataManagement():
         if database == "zefira":
             conn = pymongo.Connection("localhost", 27017)
             self.db = conn.zefira
-    
+
+            
     def fetch_benefits_usr(self,interests_ref, user):
         companies_followd = []
         benefits_dref = []
@@ -39,7 +41,8 @@ class DataManagement():
                         i['message'] = "Reservado"
                     else:
                         i['message'] = "Reservar"
-            return benefits
+            
+            return self.format_time(benefits)
 
     def fetch_user(self,username,password,branch):
         try:
@@ -56,17 +59,6 @@ class DataManagement():
                 raise Exception
         except:
             return None
-
-    def publish_benefit(self,benefit,user):
-
-        from bson.dbref import DBRef
-        if self.validate(benefit):
-            self.db.benefits.save(benefit)
-            user['benefits'].append(DBRef('benefits', benefit["_id"]))
-            self.db.companies.save(user)
-        else: 
-            raise Exception #Really lame fix
-        
 
     def validate(self,data):
         branch = data['_id'][:4]
@@ -107,7 +99,7 @@ class DataManagement():
             return None
         for i in range(len(benefits_ref)):
             benefits_deref.append(self.db.dereference(benefits_ref[i]))
-        return benefits_deref
+        return self.format_time(benefits_deref)
     
     def create_user(self, new_user, branch):
         if branch == "companies" and self.validate(new_user):
@@ -156,7 +148,10 @@ class DataManagement():
                     break
         else:
             current_user['reserves'].append(dbref_obj)
+        benefit = self.db.dereference(dbref_obj)
+        benefit['message'] = "Reservado"
         self.db.users.save(current_user)
+        return benefit
     
     def delete_edit_user(self,user_id, branch, delete = True):
         pass
@@ -167,4 +162,53 @@ class DataManagement():
     
     
     
+    def publish_benefit(self, request_arguments, user):
+        import base64, uuid
+        import datetime
+        benefit = {
+            "_id":"bene"+base64.b64encode(uuid.uuid4().bytes + uuid.uuid4().bytes),
+            "title":request_arguments['title'][0],
+            "description": request_arguments['description'][0],
+            "company_name": user['info']['name'][0],
+            'date_published' : datetime.datetime.now(),
+            'active': True,
+            'dates_reserved': [],
+            'dates_validated': [],
+            'times_reserved': 0,
+            'times_validated': 0 ,
+            #'picture_id': '',
+            'benefit_type' :request_arguments['benefit_type'][0],
+            }
+        
+        from bson.dbref import DBRef
+        if self.validate(benefit):
+            self.db.benefits.save(benefit)
+            user['benefits'].append(DBRef('benefits', benefit["_id"]))
+            self.db.companies.save(user)
+            return True
+        else: 
+            return False
     
+
+    def format_time(self, data):
+        import datetime 
+        date_formatted = ""
+        delta = None
+        for i in data:
+            now = i['date_published']
+            now2 = datetime.datetime.now()
+            delta = now2 - now
+            total_seconds = delta.total_seconds()
+            if total_seconds > 120 and total_seconds < 3000:
+                date_format = "Hace unos minutos"
+            elif total_seconds > 3000 and total_seconds < 4000:
+                date_format = "Hace aproximadamente una hora"
+            elif total_seconds > 4000:
+                date_format = "Hace mas de una hora"
+            else:
+                date_format = "Hace unos segundos"
+            
+            i['date_published'] = date_format
+        return data
+
+

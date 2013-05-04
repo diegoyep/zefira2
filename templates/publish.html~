@@ -7,8 +7,14 @@
   <input name="title" type="text" class="title" value"" />
   </br>
   <textarea name="description" rows="30" cols="40"> </textarea> </br>
+  <label for="benefit_type">Tipos beneficios: </label>
+  <select name="benefit_type">
+    <option value="descuento">Descuento</option>
+    <option value="promocion">Promocion</option>
+    <option value="cortesia">Cortesia</option>
+    <option value="grupal">Grupal</option>
+  </select></br>
   <input type="submit" value="Publish" />
- {% if not message %}
-<p> Ha intentado publicar un beneficio con alguna falla, posiblemente ya existe. Intentelo de nuevo o <a href="/cbox">regrese.</a>
-{% end %}
+  
+ </form>
 {% end %}

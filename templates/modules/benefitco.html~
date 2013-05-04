@@ -1,7 +1,9 @@
 <div class="benefit" style="overflow: auto">
   <h3> {{ benefit["title"] }} </h3>
   <p> {% raw benefit["description"] %} </p>
-   <form action="" name="form" method="post" class="form">
+  <p> Tipo beneficio: {{benefit['benefit_type']}} </p>
+  <p> {{ benefit['date_published']}} </p>
+  <form action="" name="form" method="post" class="form">
   {% module xsrf_form_html() %}
   <input type="hidden" name="benefit_id" id="benefit_id" value= {{ benefit['_id'] }} />
 	</form>

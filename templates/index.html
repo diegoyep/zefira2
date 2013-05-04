@@ -1,12 +1,32 @@
 {% extends "main.html" %}
 
-{% block header %}
- <h2> {{ header_text }} </h2>
-{% end %}
 
 {% block body %}
-  <p> Si eres empresa: <a href="/empresas">Ir </a>
-  <p> Si eres cliente: <a href="/clientes">Ir </a>
+<div class="navbar">
 
+		<div class="navbar-inner">
+			<a class="brand" id="logo" href="#"> Zefira</a>
+		</div>
+	</div>
+<div class="container">
+
+  <div class="row">	
+  <h1 class="text-center"> {{ header_text }} </br> 
+  	<small>Development Version</small></h1>
+  </div>
+  <div class="presentation">
+  	
+  	</div>
+  <div class="centre">
+  </br></br>
+  
+  <div class="span4">
+  <a href="/empresas" class="btn btn-primary btn-large btn-block">Empresas </a>
+  </div>
+  <div class="span4">
+  <a href="/clientes" class="btn btn-primary btn-large btn-block">Personas  </a>
+  </div>
+  </div>
+</div>
 {% end %}
 
